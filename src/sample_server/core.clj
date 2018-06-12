@@ -341,7 +341,7 @@
       (let []
        (println "Server instance does not exist")
        (try
-        (reset! server (run-jetty handler { :port 1616 :join? false}))
+        (reset! server (run-jetty handler {:port 1616 :join? false}))
         (mon/mongodb-connect db-name)
         (catch Exception ex
                (println ex))
