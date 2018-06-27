@@ -1,5 +1,9 @@
 (ns sample-server.core
- (:require [server-lib.core :as srvr]
+ (:require [sample-server.session :refer [am-i-logged-in
+                                          am-i-logged-in-fn
+                                          session-cookie-string-fn
+                                          refresh-session]]
+           [server-lib.core :as srvr]
            [utils-lib.core :as utils]
            [mongo-lib.core :as mon]
            [ajax-lib.http.entity-header :as eh]
@@ -9,104 +13,75 @@
 
 (def db-name "sample-db")
 
-(defn random-uuid
- "Generate uuid"
- []
- (def uuid (.toString (java.util.UUID/randomUUID))
-  )
- uuid)
-
-(def users-map
- [{:email "markovic.vladimir86@gmail.com"
-   :password "123"}
-  {:email "123"
-   :password "123"}])
-
-(defn get-pass-for-email
- "Get password for supplied email"
- [itr
-  entity-map
-  result]
- (if (< itr (count users-map))
-  (let [db-user        (nth users-map itr)
-        same-email     (= (:email db-user) (:email entity-map))
-        same-password  (= (:password db-user) (:password entity-map))]
-       (if same-email
-           (if same-password
-               (swap! result conj {:status   "success"
-                                   :email    "success"
-                                   :password "success"})
-               (swap! result conj {:email "success"}))
-           (recur (inc itr) entity-map result))
-   )
-  @result))
+(defn get-pass-for-email-username
+  "Get password for supplied email"
+  [email-username
+   password]
+  (if-let [user-username (mon/mongodb-find-one
+                           "user"
+                           {:username email-username})]
+    (let [db-password (:password user-username)]
+      (if (= db-password
+             password)
+        (let [uuid (.toString (java.util.UUID/randomUUID))]
+          (mon/mongodb-update-by-id
+            "user"
+            (:_id user-username)
+            {:uuid uuid})
+          {:status   "success"
+           :email    "success"
+           :password "success"
+           :uuid uuid})
+        {:status   "error"
+         :email    "success"
+         :password "error"}))
+    (if-let [user-email (mon/mongodb-find-one
+                          "user"
+                          {:email email-username})]
+      (let [db-password (:password user-email)]
+        (if (= db-password
+               password)
+          (let [uuid (.toString (java.util.UUID/randomUUID))]
+            (mon/mongodb-update-by-id
+              "user"
+              (:_id user-email)
+              {:uuid uuid})
+            {:status   "success"
+             :email    "success"
+             :password "success"
+             :uuid uuid})
+          {:status   "error"
+           :email    "success"
+           :password "error"}))
+      {:status   "error"
+       :email    "error"
+       :password "error"}))
+ )
 
 (defn login-authentication
  "Login authentication"
- [entity-body]
- (let [result (get-pass-for-email 0
-                                  entity-body 
-                                  (atom {:status   "error"
-                                         :email    "error"
-                                         :password "error"}))]
+ [request-body]
+ (let [email-username (:email request-body)
+       password (:password request-body)
+       remember-me (:remember-me request-body)
+       result (get-pass-for-email-username
+                email-username
+                password)]
   (if (= (:status result)
          "success")
       {:status  (stc/ok)
        :headers {(eh/content-type) (mt/text-plain)
-                 (rsh/set-cookie)   (str "session=" (random-uuid) "; "
-                                          "Expires=Wed, 30 Aug 2019 00:00:00 GMT; "
-                                          "Path=/"
-                                          ;"Domain=localhost:1612; "
-                                          ;"Secure; "
-                                          ;"HttpOnly"
-                                          )}
-       :body    (str result)}
+                 (rsh/set-cookie) (session-cookie-string-fn
+                                    remember-me
+                                    (:uuid result))}
+       :body    (str
+                  (dissoc
+                    result
+                    :uuid))}
       {:status  (stc/unauthorized)
        :headers {(eh/content-type) (mt/text-plain)}
        :body    (str result)})
   ))
-
-; Expires=Wed, 30 Aug 2019 00:00:00 GMT
-; Max-age=5000
-; Domain=localhost:1612
-; Path=/
-; Secure
-; HttpOnly
-; SameSite=Strict
-; SameSite=Lax
-
-(defn am-i-logged-in
- "Check if user is logged in"
- [session-uuid]
- (if (= session-uuid
-        uuid)
-     {:status  (stc/ok)
-      :headers {(eh/content-type) (mt/text-plain)}}
-     {:status  (stc/unauthorized)
-      :headers {(eh/content-type) (mt/text-plain)}}))
-
-(defn get-cookie-by-name
- "Reurn cookie value by cookie name"
- [cookies
-  cookie-name
-  cookie-index]
- (if (< cookie-index (count cookies))
-  (let [[cname value] (cookies cookie-index)]
-   (if (= cookie-name
-          cname)
-    (:value value)
-    (recur cookies cookie-name (inc cookie-index))
-    ))
-  nil))
-
-
-(defn get-cookie
- "Read cookie from request"
- [request
-  cookie-name]
- (get-cookie-by-name (into [] (:cookies request))
-                     cookie-name
-                     0))
 
 (defn build-projection
  ""
@@ -213,19 +188,19 @@
  )
 
 (defn insert-entity
- "Insert entity"
- [request-body]
- (try
-  (mon/mongodb-insert-one (:entity-type request-body)
-                          (:entity request-body))
-  {:status  (stc/ok)
-   :headers {(eh/content-type) (mt/text-plain)}
-   :body    (str {:status "success"})}
-  (catch Exception ex
-   (println (.getMessage ex))
-   {:status  (stc/internal-server-error)
+  "Insert entity"
+  [request-body]
+  (try
+   (mon/mongodb-insert-one (:entity-type request-body)
+                           (:entity request-body))
+   {:status  (stc/ok)
     :headers {(eh/content-type) (mt/text-plain)}
-    :body    (str {:status "error"})}))
+    :body    (str {:status "success"})}
+   (catch Exception ex
+    (println (.getMessage ex))
+    {:status  (stc/internal-server-error)
+     :headers {(eh/content-type) (mt/text-plain)}
+     :body    (str {:status "error"})}))
  )
 
 (defn delete-entity
@@ -260,21 +235,33 @@
  )
 
 (defn routing
- "Routing function"
- [request-start-line
-  request]
- (println (str "\n" request))
- (case request-start-line
-   "POST /login" (login-authentication (parse-body request))
-   "POST /am-i-logged-in" (am-i-logged-in (get-cookie request "session"))
-   "POST /get-entities" (get-entities (parse-body request))
-   "POST /get-entity" (get-entity (parse-body request))
-   "POST /update-entity" (update-entity (parse-body request))
-   "POST /insert-entity" (insert-entity (parse-body request))
-   "DELETE /delete-entity" (delete-entity (parse-body request))
-   {:status 404
-    :headers {(eh/content-type) (mt/text-plain)}
-    :body (str {:status  "success"})}))
+  "Routing function"
+  [request-start-line
+   request]
+  (println (str "\n" request))
+  (if (am-i-logged-in-fn request)
+    (let [response
+           (case request-start-line
+             "POST /am-i-logged-in" (am-i-logged-in request)
+             "POST /get-entities" (get-entities (parse-body request))
+             "POST /get-entity" (get-entity (parse-body request))
+             "POST /update-entity" (update-entity (parse-body request))
+             "POST /insert-entity" (insert-entity (parse-body request))
+             "DELETE /delete-entity" (delete-entity (parse-body request))
+             {:status (stc/not-found)
+              :headers {(eh/content-type) (mt/text-plain)}
+              :body (str {:status  "success"})})]
+      (refresh-session
+        request
+        response))
+    (case request-start-line
+      "POST /login" (login-authentication (parse-body request))
+      "POST /sign-up" (insert-entity (parse-body request))
+      "POST /am-i-logged-in" (am-i-logged-in request)
+      {:status (stc/unauthorized)
+       :headers {(eh/content-type) (mt/text-plain)}
+       :body (str {:status  "success"})})
+   ))
 
 (defn start-server
  "Start server"
