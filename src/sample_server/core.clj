@@ -155,7 +155,7 @@
 (defn get-entities
   "Prepare data for table"
   [request-body]
-  (if (empty? (:entity-filter request-body))
+  (try
     (let [current-page (:current-page request-body)
           rows (:rows request-body)
           count-entities (mon/mongodb-count
@@ -219,12 +219,14 @@
                                 :rows             rows
                                 :total-row-count  count-entities}})
        })
-    {:status (stc/bad-request)
-     :headers {(eh/content-type) (mt/text-plain)}
-     :body (str
-             {:status  "error"
-              :error-message "404 Bad request"})})
- )
+    (catch Exception ex
+      (println (.getMessage ex))
+      {:status (stc/internal-server-error)
+       :headers {(eh/content-type) (mt/text-plain)}
+       :body (str
+               {:status "Error"
+                :message (.getMessage ex)})})
+   ))
 
 (defn get-entity
   "Prepare requested entity for response"
@@ -269,7 +271,8 @@
       {:status (stc/internal-server-error)
        :headers {(eh/content-type) (mt/text-plain)}
        :body (str
-               {:status "error"})})
+               {:status "Error"
+                :message (.getMessage ex)})})
    ))
 
 (defn insert-entity
@@ -288,7 +291,8 @@
       {:status (stc/internal-server-error)
        :headers {(eh/content-type) (mt/text-plain)}
        :body (str
-               {:status "error"})})
+               {:status "Error"
+                :message (.getMessage ex)})})
    ))
 
 (defn delete-entity
@@ -309,7 +313,8 @@
       {:status (stc/internal-server-error)
        :headers {(eh/content-type) (mt/text-plain)}
        :body (str
-               {:status "error"})})
+               {:status "Error"
+                :message (.getMessage ex)})})
    ))
 
 (defn logout
