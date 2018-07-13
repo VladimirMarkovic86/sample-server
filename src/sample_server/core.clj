@@ -383,7 +383,8 @@
   (try
     (srvr/start-server
       routing
-      {(rsh/access-control-allow-origin) "https://sample:8447"
+      {(rsh/access-control-allow-origin) #{"https://sample:8447"
+                                           "http://sample:8449"}
        (rsh/access-control-allow-methods) "GET, POST, DELETE, PUT"}
       1616)
     (mon/mongodb-connect
