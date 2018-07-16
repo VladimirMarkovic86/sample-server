@@ -10,6 +10,7 @@
          								[org.vladimir/utils-lib "0.1.0"]
          								[org.vladimir/ajax-lib "0.1.0"]
          								[org.vladimir/session-lib "0.1.0"]
+         								[org.vladimir/dao-lib "0.1.0"]
          								]
   
   ; AOT - Compailation ahead of time

@@ -9,3 +9,5 @@ cd ~/workspace/clojure/projects/server_lib
 lein install
 cd ~/workspace/clojure/projects/session_lib
 lein install
+cd ~/workspace/clojure/projects/dao_lib
+lein install
