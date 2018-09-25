@@ -9,7 +9,7 @@
      "sample-db")
 
 (defn routing
-  ""
+  "Custom routing function"
   [request]
   (rt/routing
     request))
