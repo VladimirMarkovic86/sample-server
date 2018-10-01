@@ -1,4 +1,4 @@
-# server
+# Sample server
 
 Sample server
 
