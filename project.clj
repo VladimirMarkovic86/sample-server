@@ -14,7 +14,7 @@
 
   :min-lein-version "2.0.0"
 
-  :uberjar-name "sample-client-standalone.jar"
+  :uberjar-name "sample-server-standalone.jar"
   :profiles {:production {:env {:production true}}}
   
   :hooks [environ.leiningen.hooks]
