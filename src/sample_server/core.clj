@@ -4,7 +4,8 @@
             [server-lib.core :as srvr]
             [db-lib.core :as db]
             [common-server.core :as rt]
-            [ajax-lib.http.response-header :as rsh]))
+            [ajax-lib.http.response-header :as rsh]
+            [environ.core :refer [env]]))
 
 (defn routing
   "Custom routing function"
@@ -21,11 +22,14 @@
       {(rsh/access-control-allow-origin) #{"https://sample:8447"
                                            "https://sample:1613"
                                            "http://sample:1613"
-                                           "http://sample:8449"}
+                                           "http://sample:8449"
+                                           "http://sample-client.herokuapp.com"}
        (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
        (rsh/access-control-allow-credentials) true}
-      1603
-      {:keystore-file-path
+      (or (read-string
+            (env :port))
+          1603)
+      #_{:keystore-file-path
         "certificate/sample_server.jks"
        :keystore-password
         "ultras12"})

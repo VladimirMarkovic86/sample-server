@@ -9,13 +9,18 @@
                  [org.clojars.vladimirmarkovic86/session-lib "0.1.0"]
                  [org.clojars.vladimirmarkovic86/common-server "0.1.0"]
                  [org.clojars.vladimirmarkovic86/db-lib "0.1.0"]
+                 [environ "1.0.0"]
                  ]
 
   :min-lein-version "2.0.0"
 
-  ; AOT - Compailation ahead of time
-  :main ^:skip-aot sample-server.core
-  :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}}
+  :uberjar-name "sample-client-standalone.jar"
+  :profiles {:production {:env {:production true}}}
+  
+  :hooks [environ.leiningen.hooks]
+  
+  :plugins [[environ/environ.lein "0.3.1"]
+            ]
+  
   :repl-options {:port 8603})
 
