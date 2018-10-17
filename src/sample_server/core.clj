@@ -23,7 +23,7 @@
                                            "https://sample:1613"
                                            "http://sample:1613"
                                            "http://sample:8449"
-                                           "http://sample-client.herokuapp.com"}
+                                           "https://sample-client.herokuapp.com"}
        (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
        (rsh/access-control-allow-credentials) true}
       (or (read-string
