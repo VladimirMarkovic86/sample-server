@@ -25,9 +25,7 @@
        (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
        (rsh/access-control-allow-credentials) true}
       (or (read-string
-            (get
-              (System/getenv)
-              "PORT"))
+            (System/getenv "PORT"))
           1603)
       #_{:keystore-file-path
         "certificate/sample_server.jks"
