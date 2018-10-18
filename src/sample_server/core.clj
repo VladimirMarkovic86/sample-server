@@ -18,8 +18,7 @@
   (try
     (srvr/start-server
       routing
-      {(rsh/access-control-allow-origin) #{"https://sample:8447"
-                                           "https://sample:1613"
+      {(rsh/access-control-allow-origin) #{"https://sample:1613"
                                            "http://sample:1613"
                                            "https://sample-client.herokuapp.com"}
        (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
