@@ -4,8 +4,7 @@
             [server-lib.core :as srvr]
             [db-lib.core :as db]
             [common-server.core :as rt]
-            [ajax-lib.http.response-header :as rsh]
-            [environ.core :refer [env]]))
+            [ajax-lib.http.response-header :as rsh]))
 
 (defn routing
   "Custom routing function"
@@ -26,7 +25,9 @@
        (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
        (rsh/access-control-allow-credentials) true}
       (or (read-string
-            (env :port))
+            (get
+              (System/getenv)
+              "PORT"))
           1603)
       #_{:keystore-file-path
         "certificate/sample_server.jks"
