@@ -25,11 +25,7 @@
        (rsh/access-control-allow-credentials) true}
       (or (read-string
             (System/getenv "PORT"))
-          1603)
-      #_{:keystore-file-path
-        "certificate/sample_server.jks"
-       :keystore-password
-        "ultras12"})
+          1603))
     (db/connect
       "resources/db/")
     (ssn/create-indexes)
