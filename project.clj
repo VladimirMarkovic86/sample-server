@@ -14,7 +14,6 @@
 
   :min-lein-version "2.0.0"
 
-  ; AOT - Compailation ahead of time
   :main ^:skip-aot sample-server.core
   
   :uberjar-name "sample-server-standalone.jar"
