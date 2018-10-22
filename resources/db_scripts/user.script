@@ -1,5 +1,0 @@
-(db/update-by-id
-  "user"
-  1
-  {:roles [1 2 3 7]})
-
