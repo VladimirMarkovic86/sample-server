@@ -9,7 +9,7 @@
                  [org.clojars.vladimirmarkovic86/session-lib "0.2.0"]
                  [org.clojars.vladimirmarkovic86/common-server "0.2.0"]
                  [org.clojars.vladimirmarkovic86/mongo-lib "0.2.0"]
-                 [org.clojars.vladimirmarkovic86/utils-lib "0.1.0"]
+                 [org.clojars.vladimirmarkovic86/utils-lib "0.2.0"]
                  ]
 
   :min-lein-version "2.0.0"
