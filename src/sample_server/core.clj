@@ -2,9 +2,17 @@
   (:gen-class)
   (:require [session-lib.core :as ssn]
             [server-lib.core :as srvr]
-            [db-lib.core :as db]
+            [mongo-lib.core :as mon]
+            [sample-server.scripts :as scripts]
             [common-server.core :as rt]
             [ajax-lib.http.response-header :as rsh]))
+
+(def db-uri
+     (or (System/getenv "PROD_MONGODB")
+         "mongodb://admin:passw0rd@127.0.0.1:27017/admin"))
+
+(def db-name
+     "sample-db")
 
 (defn routing
   "Custom routing function"
@@ -16,18 +24,37 @@
   "Start server"
   []
   (try
-    (srvr/start-server
-      routing
-      {(rsh/access-control-allow-origin) #{"https://sample:1613"
-                                           "http://sample:1613"
-                                           "https://sample-client.herokuapp.com"}
-       (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
-       (rsh/access-control-allow-credentials) true}
-      (or (read-string
-            (System/getenv "PORT"))
-          1603))
-    (db/connect
-      "resources/db/")
+    (let [port (System/getenv "PORT")
+          port (if port
+                 (read-string
+                   port)
+                 1603)
+          access-control-allow-origin #{"https://sample:8447"
+                                        "https://sample:1613"
+                                        "http://sample:1613"
+                                        "http://sample:8449"}
+          access-control-allow-origin (if (System/getenv "CLIENT_ORIGIN")
+                                        (conj
+                                          access-control-allow-origin
+                                          (System/getenv "CLIENT_ORIGIN"))
+                                        access-control-allow-origin)
+          certificates {:keystore-file-path
+                         "certificate/sample_server.jks"
+                        :keystore-password
+                         "ultras12"}
+          certificates (when-not (System/getenv "CERTIFICATES")
+                         certificates)]
+      (srvr/start-server
+        routing
+        {(rsh/access-control-allow-origin) access-control-allow-origin
+         (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
+         (rsh/access-control-allow-credentials) true}
+        port
+        certificates))
+    (mon/mongodb-connect
+      db-uri
+      db-name)
+    (scripts/initialize-db-if-needed)
     (ssn/create-indexes)
     (catch Exception e
       (println (.getMessage e))
@@ -39,6 +66,7 @@
   []
   (try
     (srvr/stop-server)
+    (mon/mongodb-disconnect)
     (catch Exception e
       (println (.getMessage e))
      ))
