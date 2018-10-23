@@ -28,20 +28,29 @@
           port (if port
                  (read-string
                    port)
-                 1603)]
+                 1603)
+          access-control-allow-origin #{"https://sample:8447"
+                                        "https://sample:1613"
+                                        "http://sample:1613"
+                                        "http://sample:8449"}
+          access-control-allow-origin (if (System/getenv "CLIENT_ORIGIN")
+                                        (conj
+                                          access-control-allow-origin
+                                          (System/getenv "CLIENT_ORIGIN"))
+                                        access-control-allow-origin)
+          certificates {:keystore-file-path
+                         "certificate/sample_server.jks"
+                        :keystore-password
+                         "ultras12"}
+          certificates (when-not (System/getenv "CERTIFICATES")
+                         certificates)]
       (srvr/start-server
         routing
-        {(rsh/access-control-allow-origin) #{"https://sample:8447"
-                                             "https://sample:1613"
-                                             "http://sample:1613"
-                                             "http://sample:8449"}
+        {(rsh/access-control-allow-origin) access-control-allow-origin
          (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
          (rsh/access-control-allow-credentials) true}
         port
-        {:keystore-file-path
-          "certificate/sample_server.jks"
-         :keystore-password
-          "ultras12"}))
+        certificates))
     (mon/mongodb-connect
       db-uri
       db-name)
