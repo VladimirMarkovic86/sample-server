@@ -32,12 +32,17 @@
           access-control-allow-origin #{"https://sample:8447"
                                         "https://sample:1613"
                                         "http://sample:1613"
+                                        "https://sample:1603"
+                                        "http://sample:1603"
                                         "http://sample:8449"}
           access-control-allow-origin (if (System/getenv "CLIENT_ORIGIN")
                                         (conj
                                           access-control-allow-origin
                                           (System/getenv "CLIENT_ORIGIN"))
                                         access-control-allow-origin)
+          access-control-map {(rsh/access-control-allow-origin) access-control-allow-origin
+                              (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
+                              (rsh/access-control-allow-credentials) true}
           certificates {:keystore-file-path
                          "certificate/sample_server.jks"
                         :keystore-password
@@ -53,9 +58,7 @@
        )
       (srvr/start-server
         routing
-        {(rsh/access-control-allow-origin) access-control-allow-origin
-         (rsh/access-control-allow-methods) "OPTIONS, GET, POST, DELETE, PUT"
-         (rsh/access-control-allow-credentials) true}
+        access-control-map
         port
         certificates))
     (mon/mongodb-connect
