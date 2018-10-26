@@ -13,7 +13,7 @@
          "mongodb://admin:passw0rd@127.0.0.1:27017/admin"))
 
 (def db-name
-     "sample-db")
+     "heroku_dxwxc5rg")
 
 (defn routing
   "Custom routing function"
