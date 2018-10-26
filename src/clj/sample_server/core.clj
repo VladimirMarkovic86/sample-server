@@ -8,7 +8,8 @@
             [ajax-lib.http.response-header :as rsh]))
 
 (def db-uri
-     (or (System/getenv "PROD_MONGODB")
+     (or (System/getenv "MONGODB_URI")
+         (System/getenv "PROD_MONGODB")
          "mongodb://admin:passw0rd@127.0.0.1:27017/admin"))
 
 (def db-name
