@@ -46,6 +46,7 @@
      {:code 1007, :english "Gender", :serbian "Пол" }
      {:code 1008, :english "Diet", :serbian "Исхрана" }
      {:code 1009, :english "Activity", :serbian "Активност" }
+     {:code 1010, :english "Test person entity", :serbian "Тестирај ентитет особа" }
      {:code 31, :english "No entities", :serbian "Нема ентитета" }])
   (mon/mongodb-insert-many
     "role"
@@ -66,7 +67,9 @@
      {:role-name "Role moderator",
       :functionalities [ "role-read", "role-update" ] }
      {:role-name "Role moderator 2",
-      :functionalities [ "role-read" ]}])
+      :functionalities [ "role-read" ]}
+     {:role-name "Test privileges",
+      :functionalities [ "test-person-entity" ]}])
   (let [user-admin-id (:_id
                         (mon/mongodb-find-one
                           "role"
@@ -83,6 +86,10 @@
                         (mon/mongodb-find-one
                           "role"
                           {:role-name "Role administrator"}))
+        test-admin-id (:_id
+                        (mon/mongodb-find-one
+                          "role"
+                          {:role-name "Test privileges"}))
         encrypted-password (utils/encrypt-password
                              (or (System/getenv "ADMIN_USER_PASSWORD")
                                  "123"))]
@@ -91,7 +98,11 @@
       {:username "admin"
        :email "123@123"
        :password encrypted-password
-       :roles [user-admin-id person-admin-id language-admin-id role-admin-id]}))
+       :roles [user-admin-id
+               person-admin-id
+               language-admin-id
+               role-admin-id
+               test-admin-id]}))
   (let [user-id (:_id
                   (mon/mongodb-find-one
                     "user"
