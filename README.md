@@ -1,36 +1,46 @@
 # Sample server
 
-Sample server
+Sample server project implements backend part of sample project, and is hosted on server-lib.
 
-## Installation
+### Installing
 
-Download from http://gitlab:1610/VladimirMarkovic86/sample-server.
+Clone project from git by executing:
 
-## Usage
+```
+git clone git@github.com:VladimirMarkovic86/sample-server.git
 
-FIXME: explanation
+or
 
-    $ java -jar server-0.1.0-standalone.jar [args]
+git clone https://github.com/VladimirMarkovic86/sample-server.git
+```
 
-## Options
+After that execute command:
 
-FIXME: listing of options this app accepts.
+```
+cd sample-server
+```
 
-## Examples
+Add following line in hosts file:
 
-...
+```
+127.0.0.1 sample
+```
 
-### Bugs
+and run project with this command:
 
-...
+```
+lein run
+```
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+By default project listens on port 1603, so you can make requests on https://sample:1603 address.
+
+**For purpose of making requests sample-client was made and you should start up sample-client also.**
+
+## Authors
+
+* **Vladimir Markovic** - [VladimirMarkovic86](https://github.com/VladimirMarkovic86)
 
 ## License
 
-Copyright © 2017 FIXME
+This project is licensed under the Eclipse Public License 1.0 - see the [LICENSE](LICENSE) file for details
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
