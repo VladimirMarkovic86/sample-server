@@ -5,7 +5,8 @@
             [mongo-lib.core :as mon]
             [sample-server.scripts :as scripts]
             [common-server.core :as rt]
-            [ajax-lib.http.response-header :as rsh]))
+            [ajax-lib.http.response-header :as rsh]
+            [audit-lib.core :refer [audit]]))
 
 (def db-uri
      (or (System/getenv "MONGODB_URI")
@@ -18,8 +19,12 @@
 (defn routing
   "Custom routing function"
   [request]
-  (rt/routing
-    request))
+  (let [response (rt/routing
+                   request)]
+    (audit
+      request
+      response)
+    response))
 
 (defn start-server
   "Start server"
