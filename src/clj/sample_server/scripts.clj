@@ -159,6 +159,26 @@
      :date (java.util.Date.)})
  )
 
+(defn db-update-2
+  "Database update 2"
+  []
+  (mon/mongodb-insert-many
+    language-cname
+    [{:code 1011, :english "Mainly sitting", :serbian "Углавном седење" }
+     {:code 1012, :english "Easy physical labor", :serbian "Лак физички рад" }
+     {:code 1013, :english "Medium physical labor", :serbian "Средње тежак физички рад" }
+     {:code 1014, :english "Hard physical labor", :serbian "Тежак физички рад" }
+     {:code 1015, :english "Very hard physical labor", :serbian "Веома тежак физички рад" }
+     {:code 1016, :english "All", :serbian "Све" }
+     {:code 1017, :english "Vegetarian", :serbian "Вегетаријанска" }
+     {:code 1018, :english "Male", :serbian "Мушки" }
+     {:code 1019, :english "Female", :serbian "Женски" }])
+  (mon/mongodb-insert-one
+    db-updates-cname
+    {:update 2
+     :date (java.util.Date.)})
+ )
+
 (defn initialize-db-if-needed
   "Check if database exists and initialize it if it doesn't"
   []
@@ -171,6 +191,10 @@
                 db-updates-cname
                 {:update 1})
       (db-update-1))
+    (when-not (mon/mongodb-exists
+                db-updates-cname
+                {:update 2})
+      (db-update-2))
     (catch Exception e
       (println e))
    ))
