@@ -40,6 +40,10 @@
                                         "http://sample:1613"
                                         "https://sample:1603"
                                         "http://sample:1603"
+                                        "https://192.168.1.86:1613"
+                                        "http://192.168.1.86:1613"
+                                        "https://192.168.1.86:1603"
+                                        "http://192.168.1.86:1603"
                                         "http://sample:8449"}
           access-control-allow-origin (if (System/getenv "CLIENT_ORIGIN")
                                         (conj
