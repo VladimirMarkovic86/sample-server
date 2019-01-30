@@ -12,7 +12,8 @@
                                               language-mod-rname
                                               role-admin-rname
                                               role-mod-rname
-                                              test-privileges-rname]]
+                                              test-privileges-rname
+                                              chat-rname]]
             [sample-middle.role-names :refer [person-admin-rname
                                               person-mod-rname]]
             [common-middle.functionalities :as fns]
@@ -240,10 +241,34 @@
      {:code 64,
       :english "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character @$!%*?&..",
       :serbian "Лозинка мора да садржи барем једно велико слово, једно мало слово, један број и један специјални карактер @$!%*?&.." }
+     {:code 65,
+      :english "Please select a file.",
+      :serbian "Молим одаберите фајл." }
 		   ])
   (mon/mongodb-insert-one
     db-updates-cname
     {:update 2
+     :date (java.util.Date.)})
+ )
+
+(defn db-update-3
+  "Database update 3"
+  []
+  (mon/mongodb-insert-many
+    language-cname
+    [{:code 66, :english "Type your message here", :serbian "Упишите вашу поруку овде" }
+     {:code 67, :english "Send", :serbian "Пошаљи" }
+     {:code 68, :english "Chat", :serbian "Ћаскање" }
+		   {:code 69, :english "Refresh", :serbian "Освежи" }
+     ])
+		(mon/mongodb-insert-many
+    role-cname
+    [{:role-name chat-rname
+      :functionalities [fns/chat]}
+     ])
+  (mon/mongodb-insert-one
+    db-updates-cname
+    {:update 3
      :date (java.util.Date.)})
  )
 
@@ -263,6 +288,10 @@
                 db-updates-cname
                 {:update 2})
       (db-update-2))
+    (when-not (mon/mongodb-exists
+                db-updates-cname
+                {:update 3})
+      (db-update-3))
     (catch Exception e
       (println e))
    ))
