@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.9.0"]
                  [org.clojars.vladimirmarkovic86/server-lib "0.3.22"]
                  [org.clojars.vladimirmarkovic86/ajax-lib "0.1.8"]
-                 [org.clojars.vladimirmarkovic86/session-lib "0.2.12"]
+                 [org.clojars.vladimirmarkovic86/session-lib "0.2.13"]
                  [org.clojars.vladimirmarkovic86/common-server "0.3.20"]
                  [org.clojars.vladimirmarkovic86/sample-middle "0.3.6"]
                  [org.clojars.vladimirmarkovic86/common-middle "0.2.5"]
