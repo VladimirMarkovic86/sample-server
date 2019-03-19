@@ -12,7 +12,7 @@
                  [org.clojars.vladimirmarkovic86/common-middle "0.2.5"]
                  [org.clojars.vladimirmarkovic86/mongo-lib "0.2.4"]
                  [org.clojars.vladimirmarkovic86/utils-lib "0.4.6"]
-                 [org.clojars.vladimirmarkovic86/audit-lib "0.1.17"]
+                 [org.clojars.vladimirmarkovic86/audit-lib "0.1.18"]
                  ]
 
   :min-lein-version "2.0.0"
