@@ -38,6 +38,7 @@
     (let [result (utilsclj/execute-shell-command
                    [;"cd /home/vladimir/workspace/clojure/projects/sample_server/resources/public/reports"
                     "cd /app/resources/public/reports"
+                    "pwd"
                     "pdflatex cover_letter.tex"])]
       (println
         result))
