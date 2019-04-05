@@ -35,10 +35,12 @@
   "Start server"
   []
   (try
-    (utilsclj/execute-shell-command
-      [;"cd /home/vladimir/workspace/clojure/projects/sample_server/resources/public/reports"
-       "cd /app/resources/public/reports"
-       "pdflatex cover_letter.tex"])
+    (let [result (utilsclj/execute-shell-command
+                   [;"cd /home/vladimir/workspace/clojure/projects/sample_server/resources/public/reports"
+                    "cd /app/resources/public/reports"
+                    "pdflatex cover_letter.tex"])]
+      (println
+        result))
     (let [port (config/define-port)
           access-control-map (config/build-access-control-map)
           certificates-map (config/build-certificates-map)]
