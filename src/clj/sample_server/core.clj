@@ -53,7 +53,8 @@
     (let [result (utilsclj/execute-shell-command
                    [;"cd /home/vladimir/workspace/clojure/projects/sample_server/resources/public/reports"
                     "cd /app/resources/public/reports"
-                    "pdflatex cover_letter.tex"])]
+                    "pdflatex cover_letter.tex"
+                    "ls -al"])]
       (println
         result))
     (catch Exception e
