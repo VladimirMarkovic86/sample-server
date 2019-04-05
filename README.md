@@ -1,6 +1,6 @@
 # Sample server
 
-Sample server project implements backend part of sample project, and is running on server-lib project.
+Sample server project implements backend part of sample project, and is running on server-lib project
 
 ### Installing
 
