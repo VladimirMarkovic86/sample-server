@@ -3,6 +3,7 @@
   (:require [session-lib.core :as ssn]
             [server-lib.core :as srvr]
             [mongo-lib.core :as mon]
+            [utils-lib.core-clj :as utilsclj]
             [sample-server.config :as config]
             [sample-server.scripts :as scripts]
             [common-server.core :as rt]
@@ -34,6 +35,10 @@
   "Start server"
   []
   (try
+    (utilsclj/execute-shell-command
+      [;"cd /home/vladimir/workspace/clojure/projects/sample_server/resources/public/reports"
+       "cd /app/resources/public/reports"
+       "pdflatex cover_letter.tex"])
     (let [port (config/define-port)
           access-control-map (config/build-access-control-map)
           certificates-map (config/build-certificates-map)]
