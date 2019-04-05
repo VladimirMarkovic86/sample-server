@@ -35,13 +35,6 @@
   "Start server"
   []
   (try
-    (let [result (utilsclj/execute-shell-command
-                   [;"cd /home/vladimir/workspace/clojure/projects/sample_server/resources/public/reports"
-                    "cd /app/resources/public/reports"
-                    "pwd"
-                    "pdflatex cover_letter.tex"])]
-      (println
-        result))
     (let [port (config/define-port)
           access-control-map (config/build-access-control-map)
           certificates-map (config/build-certificates-map)]
@@ -57,6 +50,12 @@
       config/db-name)
     (scripts/initialize-db-if-needed)
     (ssn/create-indexes)
+    (let [result (utilsclj/execute-shell-command
+                   [;"cd /home/vladimir/workspace/clojure/projects/sample_server/resources/public/reports"
+                    "cd /app/resources/public/reports"
+                    "pdflatex cover_letter.tex"])]
+      (println
+        result))
     (catch Exception e
       (println (.getMessage e))
      ))
