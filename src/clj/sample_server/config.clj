@@ -1,6 +1,10 @@
 (ns sample-server.config
   (:require [server-lib.core :as srvr]
-            [ajax-lib.http.response-header :as rsh]))
+            [ajax-lib.http.response-header :as rsh]
+            [sample-server.person.entity :as persone]
+            [common-server.core :as rt]
+            [utils-lib.core-clj :as utilsclj]
+            [pdflatex-lib.core :as tex]))
 
 (def db-uri
      (or (System/getenv "MONGODB_URI")
@@ -9,6 +13,9 @@
 
 (def db-name
      "sample-db")
+
+(def project-absolute-path
+     "/home/vladimir/workspace/clojure/projects/sample_server")
 
 (defn define-port
   "Defines server's port"
@@ -105,5 +112,42 @@
     (reset!
       audit-action-a
       audit-actions))
+ )
+
+(defn add-custom-entities-to-entities-map
+  "Adds custom entities for this project into entities map from common-server"
+  []
+  (swap!
+    rt/entities-map
+    assoc
+    :person {:reports persone/reports}))
+
+(defn set-report-paths
+  "Sets report paths"
+  []
+  (let [absolute-path (:out (utilsclj/execute-shell-command
+                              "pwd"))
+        path-prefix (if (= absolute-path
+                           project-absolute-path)
+                      ""
+                      (str
+                        project-absolute-path
+                        "/"))]
+    (reset!
+      tex/reports-templates-path
+      (or (System/getenv
+            "REPORTS_TEMPLATES_PATH")
+          (str
+            path-prefix
+            @tex/reports-templates-path))
+     )
+    (reset!
+      tex/reports-generated-path
+      (or (System/getenv
+            "REPORTS_GENERATED_PATH")
+          (str
+            path-prefix
+            @tex/reports-generated-path))
+     ))
  )
 
