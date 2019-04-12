@@ -3,7 +3,6 @@
   (:require [session-lib.core :as ssn]
             [server-lib.core :as srvr]
             [mongo-lib.core :as mon]
-            [utils-lib.core-clj :as utilsclj]
             [sample-server.config :as config]
             [sample-server.scripts :as scripts]
             [common-server.core :as rt]
@@ -50,6 +49,8 @@
       config/db-name)
     (scripts/initialize-db-if-needed)
     (ssn/create-indexes)
+    (config/add-custom-entities-to-entities-map)
+    (config/set-report-paths)
     (catch Exception e
       (println (.getMessage e))
      ))
