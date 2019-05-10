@@ -26,5 +26,12 @@
      {:code 1017, :english "Vegetarian", :serbian "Вегетаријанска" }
      {:code 1018, :english "Male", :serbian "Мушки" }
      {:code 1019, :english "Female", :serbian "Женски" }
+     {:code 1020, :english "Chart title", :serbian "Наслов графика" }
+     {:code 1021, :english "X axis title", :serbian "Наслов апсцисе" }
+     {:code 1022, :english "Y axis title", :serbian "Наслов ординате" }
+     {:code 1023, :english "line", :serbian "линија" }
+     {:code 1024, :english "data", :serbian "податак" }
+     {:code 1025, :english "bar", :serbian "traka" }
+     {:code 1026, :english "piece", :serbian "део" }
      ]))
 
