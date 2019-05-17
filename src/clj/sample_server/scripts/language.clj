@@ -31,7 +31,7 @@
      {:code 1022, :english "Y axis title", :serbian "Наслов ординате" }
      {:code 1023, :english "line", :serbian "линија" }
      {:code 1024, :english "data", :serbian "податак" }
-     {:code 1025, :english "bar", :serbian "traka" }
+     {:code 1025, :english "bar", :serbian "трака" }
      {:code 1026, :english "piece", :serbian "део" }
      ]))
 
