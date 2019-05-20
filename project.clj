@@ -7,7 +7,7 @@
                  [org.clojars.vladimirmarkovic86/server-lib "0.3.27"]
                  [org.clojars.vladimirmarkovic86/ajax-lib "0.1.9"]
                  [org.clojars.vladimirmarkovic86/session-lib "0.2.18"]
-                 [org.clojars.vladimirmarkovic86/common-server "0.3.32"]
+                 [org.clojars.vladimirmarkovic86/common-server "0.3.33"]
                  [org.clojars.vladimirmarkovic86/sample-middle "0.3.8"]
                  [org.clojars.vladimirmarkovic86/common-middle "0.2.6"]
                  [org.clojars.vladimirmarkovic86/mongo-lib "0.2.8"]
