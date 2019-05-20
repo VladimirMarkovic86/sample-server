@@ -33,5 +33,6 @@
      {:code 1024, :english "data", :serbian "податак" }
      {:code 1025, :english "bar", :serbian "трака" }
      {:code 1026, :english "piece", :serbian "део" }
+     {:code 1027, :english "Chart", :serbian "График" }
      ]))
 

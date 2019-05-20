@@ -3,6 +3,10 @@
             [ajax-lib.http.response-header :as rsh]
             [sample-server.person.entity :as persone]
             [common-server.core :as rt]
+            [common-middle.role-names :refer [chat-rname
+                                              reports-rname]]
+            [sample-middle.role-names :refer [person-admin-rname
+                                              chart-rname]]
             [utils-lib.core-clj :as utilsclj]
             [pdflatex-lib.core :as tex]))
 
@@ -149,5 +153,16 @@
             path-prefix
             @tex/reports-generated-path))
      ))
+ )
+
+(defn read-sign-up-roles
+  "Reads and fills sign up roles vector in common-server.core namespace"
+  []
+  (let [role-names [chat-rname
+                    reports-rname
+                    person-admin-rname
+                    chart-rname]]
+    (rt/read-sign-up-role-ids
+      role-names))
  )
 
