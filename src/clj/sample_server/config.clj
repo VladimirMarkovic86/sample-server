@@ -3,6 +3,8 @@
             [ajax-lib.http.response-header :as rsh]
             [sample-server.person.entity :as persone]
             [common-server.core :as rt]
+            [common-server.preferences :as prf]
+            [sample-server.preferences :as ssprf]
             [common-middle.role-names :refer [chat-rname
                                               reports-rname]]
             [sample-middle.role-names :refer [person-admin-rname
@@ -195,4 +197,11 @@
       rt/reset-password-mail-template-path
       reset-password-mail-template-path))
  )
+
+(defn bind-set-specific-preferences-fn
+  "Binds set specific preferences to common server atom"
+  []
+  (reset!
+    prf/set-specific-preferences-a-fn
+    ssprf/set-specific-preferences-fn))
 

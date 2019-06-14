@@ -1,6 +1,7 @@
 (ns sample-server.person.entity
   (:require [language-lib.core :refer [get-label]]
-            [sample-middle.person.entity :as smpe])
+            [sample-middle.person.entity :as smpe]
+            [common-server.preferences :as prf])
   (:import [java.text SimpleDateFormat]))
 
 (defn format-birthday-field
@@ -47,7 +48,10 @@
 
 (defn reports
   "Returns reports projection"
-  [& [chosen-language]]
+  [request
+   & [chosen-language]]
+  (prf/set-preferences
+    request)
   {:entity-label (get-label
                    1001
                    chosen-language)
@@ -62,7 +66,12 @@
                 ;:activity
                 ]
    :qsort {:first-name 1}
-   :rows smpe/rows
+   :rows (int
+           (smpe/calculate-rows))
+   :table-rows (int
+                 @smpe/table-rows-a)
+   :card-columns (int
+                   @smpe/card-columns-a)
    :labels {:first-name (get-label
                           1002
                           chosen-language)
