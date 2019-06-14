@@ -34,5 +34,6 @@
      {:code 1025, :english "bar", :serbian "трака" }
      {:code 1026, :english "piece", :serbian "део" }
      {:code 1027, :english "Chart", :serbian "График" }
+     {:code 1028, :english "Person entity", :serbian "Ентитет особа" }
      ]))
 
