@@ -8,20 +8,9 @@
             [common-server.core :as rt]
             [audit-lib.core :refer [audit]]))
 
-(def logged-in-routing-set
-  (atom
-    #{}))
-
-(def logged-out-routing-set
-  (atom
-    #{}))
-
 (defn routing
   "Custom routing function"
   [request]
-  (rt/add-new-routes
-    @logged-in-routing-set
-    @logged-out-routing-set)
   (let [response (rt/routing
                    request)]
     (when @config/audit-action-a
@@ -55,6 +44,7 @@
     (config/setup-e-mail-account)
     (config/setup-e-mail-templates-path)
     (config/bind-set-specific-preferences-fn)
+    (config/bind-specific-functionalities-by-url)
     (catch Exception e
       (println (.getMessage e))
      ))

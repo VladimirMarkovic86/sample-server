@@ -9,6 +9,7 @@
                                               reports-rname]]
             [sample-middle.role-names :refer [person-admin-rname
                                               chart-rname]]
+            [sample-middle.functionalities-by-url :as smfns-by-url]
             [utils-lib.core-clj :as utilsclj]
             [pdflatex-lib.core :as tex]))
 
@@ -204,4 +205,9 @@
   (reset!
     prf/set-specific-preferences-a-fn
     ssprf/set-specific-preferences-fn))
+
+(defn bind-specific-functionalities-by-url
+  "Binds specific functionalities by url"
+  []
+  (smfns-by-url/bind-specific-functionalities-by-url))
 
